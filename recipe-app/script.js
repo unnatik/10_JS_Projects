@@ -1,4 +1,4 @@
-const mealsEl = document.getElementById("meals");
+const meals = document.getElementById("meals");
 
 getRandomMeal();
 
@@ -49,5 +49,36 @@ function addMeal(mealData, random = false) {
         </div>
     `;
 
-  mealsEl.appendChild(meal);
+  const btn = meal.querySelector(".meal-body .fav-btn");
+  btn.addEventListener("click", () => {
+    if (btn.classList.contains("active")) {
+      removeMealFromLS(mealData.idMeal);
+      btn.classList.remove("active");
+    } else {
+      addMealsToLS(mealData.idMeal);
+      btn.classList.add("active");
+    }
+  });
+
+  meals.appendChild(meal);
+}
+
+function addMealsToLS(mealId) {
+  const mealIds = getMealsFromLS();
+  console.log(mealIds);
+  localStorage.setItem("mealIds", JSON.stringify([...mealIds, mealId]));
+}
+
+function removeMealFromLS(mealId) {
+  const mealIds = getMealsFromLS();
+  localStorage.setItem(
+    "mealIds",
+    JSON.stringify(mealIds.filter((id) => id !== mealId))
+  );
+}
+
+function getMealsFromLS() {
+  const mealIds = JSON.parse(localStorage.getItem("mealIds"));
+  
+  return mealIds === null ? [] : mealIds;
 }
